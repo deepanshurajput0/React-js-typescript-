@@ -1,18 +1,37 @@
-import './App.css'
-import { Person } from './components/Person'
-import Counter from './components/Counter'
+import { createContext, ReactNode, useState } from "react"
+import Box from "./components/Box"
 
-import Button from './components/Button'
+type  ThemeType = string | number 
+
+interface ThemeContextType {
+  theme: ThemeType,
+  toggleTheme:()=>void
+}
+
+export const ThemeContext = createContext<ThemeContextType >({
+  theme:'light',
+  toggleTheme:()=>{}
+})
+
+const ThemeProvider =({children}:{children:ReactNode})=>{
+  const [theme, setTheme] = useState<ThemeType>('light')
+  const toggleTheme =()=>{
+     setTheme((prev)=>prev === 'light' ? 'dark ' : 'light')
+  }
+  return(
+    <ThemeContext.Provider value={{theme, toggleTheme}} >
+       {children}
+    </ThemeContext.Provider>
+  )
+}
+
+
 function App() {
-   let name:string = 'deepanshu'
-   let age:number = 20
-   let single:boolean = true
+
   return (
-    <>
-     <Person name={name} age={age} single={single}  /> 
-     <Counter/>  
-     <Button onClick={()=>alert('hello typescript')} name={'click me'} />
-    </>
+    <ThemeProvider>
+      <Box label="name" value={'name'} setter={''}/>
+    </ThemeProvider>
   )
 }
 
